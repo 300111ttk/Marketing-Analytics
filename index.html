@@ -61,11 +61,18 @@
             const [auditResult, setAuditResult] = useState(null);
 
             const callGeminiAI = async () => {
-                if (!formData.brandName) { alert("Vui lòng nhập tên thương hiệu!"); return; }
-                
-                setLoading(true);
-                const apiKey = "AIzaSyDrug-ZYYSvzp4qfRino-5rM-ixKiehBU4"; 
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+    if (!formData.brandName) { alert("Vui lòng nhập tên thương hiệu!"); return; }
+    
+    setLoading(true);
+
+    // CHÚ Ý: Đảm bảo tên biến ở đây khớp với tên biến bạn dùng ở dòng URL phía dưới
+    const API_KEY = "AIzaSyBfGJIo_chf541liWmTCAtUpxP_MG5vyS0"; 
+    
+    // Sử dụng đúng biến API_KEY đã khai báo ở trên
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+
+    try {
+        // ... giữ nguyên phần fetch bên dưới ...
 
                 const prompt = `Bạn là một Giám đốc Marketing (CMO) chuyên nghiệp. Đánh giá chiến lược Digital Marketing cho:
                 - Thương hiệu: ${formData.brandName}
