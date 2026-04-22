@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Marketing Auditor - Final Stable</title>
+    <title>AI Marketing Auditor - Gemini 3.1 Flash</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
@@ -16,11 +16,11 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- CẤU HÌNH API CỦA BẠN Ở ĐÂY ---
-        const API_KEY = "AIzaSyDrug-ZYYSvzp4qfRino-5rM-ixKiehBU4"; 
-        const MODEL_NAME = "gemini-1.5-flash"; // Dùng bản này để đảm bảo kết nối 100% thành công
+        // --- CẤU HÌNH API Ở ĐÂY ---
+        const API_KEY = "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY"; 
+        const MODEL_NAME = "gemini-3.1-flash"; // Đã cập nhật sang model bạn yêu cầu
 
-        // --- HỆ THỐNG ICON NỘI BỘ (Thay thế Lucide-React) ---
+        // --- HỆ THỐNG ICON NỘI BỘ ---
         const Sparkles = ({ className, size = 24 }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>);
         const ChevronRight = ({ className, size = 24 }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m9 18 6-6-6-6"/></svg>);
         const Loader2 = ({ className, size = 24 }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>);
@@ -28,12 +28,11 @@
         const Printer = ({ className, size = 24 }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V2h12v7"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>);
 
         const App = () => {
-            const [step, setStep] = useState('input'); // input | loading | result
+            const [step, setStep] = useState('input');
             const [formData, setFormData] = useState({ brandName: '', website: '', facebook: '', description: '' });
             const [auditResult, setAuditResult] = useState(null);
             const [error, setError] = useState(null);
 
-            // Hàm gọi API với Exponential Backoff
             const callGemini = async (prompt, retries = 5, delay = 1000) => {
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
                 
@@ -126,7 +125,6 @@
                 }
             };
 
-            // Component Trạng thái
             const StatusPill = ({ status }) => {
                 const config = {
                     PASS: { bg: 'bg-emerald-100', text: 'text-emerald-700', label: 'ĐẠT' },
@@ -143,7 +141,6 @@
 
             return (
                 <div className="min-h-screen bg-slate-50 font-sans text-slate-900 overflow-x-hidden">
-                    {/* Cấu hình CSS */}
                     <style dangerouslySetInnerHTML={{ __html: `
                         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
                         body { font-family: 'Inter', sans-serif; }
@@ -161,7 +158,6 @@
                         }
                     `}} />
 
-                    {/* Giao diện Nhập liệu */}
                     {step === 'input' && (
                         <div className="max-w-2xl mx-auto pt-20 px-6 animate-in">
                             <div className="text-center mb-10">
@@ -227,7 +223,6 @@
                         </div>
                     )}
 
-                    {/* Giao diện Loading */}
                     {step === 'loading' && (
                         <div className="flex flex-col items-center justify-center min-h-screen text-center px-6 animate-in">
                             <Loader2 className="text-indigo-600 animate-spin mb-6" size={64} />
@@ -236,7 +231,6 @@
                         </div>
                     )}
 
-                    {/* Giao diện Kết quả (Audit Dashboard) */}
                     {step === 'result' && auditResult && (
                         <div className="max-w-6xl mx-auto py-10 px-6 print-container animate-in">
                             <div className="mb-6 flex justify-between items-end no-print">
@@ -249,7 +243,6 @@
                                 <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">Phân tích bởi CMO AI</span>
                             </div>
 
-                            {/* Header Dashboard */}
                             <div className="bg-[#0B1C3E] text-white p-10 rounded-t-3xl flex flex-col md:flex-row justify-between items-center gap-6 audit-card shadow-lg">
                                 <div className="flex-1">
                                     <h1 className="text-4xl font-black tracking-tight uppercase">{auditResult.brandName}</h1>
@@ -261,7 +254,6 @@
                                 </div>
                             </div>
 
-                            {/* Summary Cards */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
                                 {[
                                     { label: 'TỔNG TIÊU CHÍ', val: auditResult.totalCriteria, color: 'border-slate-300', text: 'text-slate-900', bg: 'bg-white' },
@@ -275,7 +267,6 @@
                                 ))}
                             </div>
 
-                            {/* Table Detail */}
                             <div className="bg-white mt-10 rounded-3xl shadow-lg border border-slate-100 overflow-hidden audit-card">
                                 <div className="p-6 border-b border-slate-100 bg-slate-50 flex justify-between items-center no-print">
                                     <h3 className="font-bold text-slate-800 flex items-center gap-2 uppercase tracking-wide text-sm">
@@ -313,7 +304,6 @@
                                 </div>
                             </div>
 
-                            {/* Strategic Note */}
                             <div className="mt-10 bg-white p-10 rounded-3xl border-l-[12px] border-[#FF6B00] shadow-lg audit-card">
                                 <h4 className="font-black text-indigo-900 flex items-center gap-2 mb-4 text-xs uppercase tracking-widest">
                                     <Sparkles className="text-amber-500" size={20} /> ĐỀ XUẤT TỪ GIÁM ĐỐC MARKETING AI:
@@ -323,12 +313,10 @@
                                 </p>
                             </div>
 
-                            {/* Footer Info (Only Print) */}
                             <div className="hidden print:block mt-12 text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest">
                                 Báo cáo được tạo bởi AI Marketing Auditor • {new Date().toLocaleDateString('vi-VN')}
                             </div>
 
-                            {/* Export Button Section */}
                             <div className="mt-12 text-center pb-16 no-print">
                                 <button 
                                     onClick={() => window.print()}
