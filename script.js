@@ -1,19 +1,26 @@
 async function evaluateWithAI() {
-    const name = document.getElementById('storeName').value;
-    const info = document.getElementById('additionalInfo').value;
-    const btn = document.getElementById('btnCheck');
-    const loading = document.getElementById('loading');
-    const pdfArea = document.getElementById('pdf-content');
+    const name = document.getElementById('storeName').value.trim();
+    const info = document.getElementById('additionalInfo').value.trim();
+    const btn = document.getElementById('btnStart');
+    const pdfArea = document.getElementById('report-container');
 
-    if(!CONFIG.GEMINI_API_KEY || CONFIG.GEMINI_API_KEY.includes("AIza") === false) {
-        alert("Lỗi: Bạn chưa dán đúng API Key vào file config.js"); return;
+    // Kiểm tra xem config đã load chưa
+    if (typeof CONFIG === 'undefined' || !CONFIG.GEMINI_API_KEY || CONFIG.GEMINI_API_KEY.includes("AIza") === false) {
+        alert("Lỗi: Không tìm thấy API Key trong file config.js hoặc mã không đúng!");
+        return;
     }
 
-    btn.disabled = true; loading.style.display = 'block'; pdfArea.style.display = 'none';
+    if (!name || !info) {
+        alert("Vui lòng nhập tên cửa hàng và dữ liệu!");
+        return;
+    }
 
-    const prompt = `Bạn là chuyên gia Marketing Audit của Billig Global. Hãy phân tích cửa hàng ${name} với dữ liệu sau: ${info}. 
-    Sử dụng bộ tiêu chí: Website (UI, GDPR, NAP), Google Maps (Review, Ảnh), Social (Reels, WhatsApp). 
-    Trả về định dạng JSON: {"score": "số %", "pass_count": "số", "fail_count": "số", "details": [{"criteria": "Tên tiêu chí", "status": "ĐẠT/KHÔNG ĐẠT", "comment": "Nhận xét"}], "advice": "Lời khuyên"}`;
+    btn.innerText = "Hệ thống đang đối soát...";
+    btn.disabled = true;
+
+    const prompt = `Bạn là chuyên gia Audit Marketing của Billig Global. Hãy thẩm định khách hàng: ${name}. Dữ liệu: ${info}.
+    Trả về định dạng JSON (không giải thích): 
+    {"score": "60%", "pass": 6, "fail": 6, "details": [{"item": "Tiêu chí", "status": "ĐẠT/KHÔNG ĐẠT", "note": "Nhận xét"}], "advice": "Lời khuyên"}`;
 
     try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${CONFIG.GEMINI_API_KEY}`, {
@@ -23,32 +30,42 @@ async function evaluateWithAI() {
         });
 
         const data = await response.json();
-        const result = JSON.parse(data.candidates[0].content.parts[0].text.replace(/```json|```/g, ""));
+        
+        if (data.error) throw new Error(data.error.message);
+
+        const cleanJson = data.candidates[0].content.parts[0].text.replace(/```json|```/g, "").trim();
+        const res = JSON.parse(cleanJson);
 
         document.getElementById('display-name').innerText = name;
-        document.getElementById('score-val').innerText = result.score;
-        document.getElementById('pass-count').innerText = result.pass_count;
-        document.getElementById('fail-count').innerText = result.fail_count;
-        document.getElementById('advice-text').innerHTML = "<strong>LỜI KHUYÊN:</strong> " + result.advice;
-
-        const tbody = document.getElementById('audit-body');
-        tbody.innerHTML = "";
-        result.details.forEach(item => {
-            const tag = item.status.includes("ĐẠT") && !item.status.includes("KHÔNG") ? "tag-pass" : "tag-fail";
-            tbody.innerHTML += `<tr><td>${item.criteria}</td><td><span class="status-tag ${tag}">${item.status}</span></td><td>${item.comment}</td></tr>`;
+        document.getElementById('score-val').innerText = res.score;
+        document.getElementById('pass-count').innerText = res.pass;
+        document.getElementById('fail-count').innerText = res.fail;
+        
+        let html = "";
+        res.details.forEach(d => {
+            const cls = d.status.includes("ĐẠT") && !d.status.includes("KHÔNG") ? "status-pass" : "status-fail";
+            html += `<tr><td>${d.item}</td><td class="${cls}">${d.status}</td><td>${d.note}</td></tr>`;
         });
+        document.getElementById('audit-body').innerHTML = html;
+        document.getElementById('advice-text').innerText = res.advice;
 
         pdfArea.style.display = 'block';
-        document.getElementById('btnDownload').style.display = 'block';
+        document.getElementById('btnPDF').style.display = 'block';
     } catch (e) {
-        alert("Lỗi: Hệ thống không phản hồi. Hãy kiểm tra API Key.");
+        alert("LỖI KẾT NỐI: " + e.message);
     } finally {
-        btn.disabled = false; loading.style.display = 'none';
+        btn.innerText = "BẮT ĐẦU PHÂN TÍCH";
+        btn.disabled = false;
     }
 }
 
 function downloadPDF() {
-    const element = document.getElementById('pdf-content');
-    const storeName = document.getElementById('storeName').value || 'Report';
-    html2pdf().set({ margin: 10, filename: `Audit-${storeName}.pdf`, html2canvas: { scale: 2 } }).from(element).save();
+    const element = document.getElementById('report-container');
+    const storeName = document.getElementById('storeName').value || 'Audit';
+    html2pdf().from(element).set({ 
+        margin: 10, 
+        filename: `Audit-${storeName}.pdf`, 
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    }).save();
 }
