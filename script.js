@@ -2,22 +2,27 @@ async function startAudit() {
     const name = document.getElementById('storeName').value;
     const data = document.getElementById('storeData').value;
     const btn = document.getElementById('btnRun');
-    const reportArea = document.getElementById('report-area');
 
-    if (!name || !data) return alert("Vui lòng nhập đủ dữ liệu!");
+    if (!name || !data) return alert("Vui lòng nhập đủ tên quán và dữ liệu!");
 
+    // Trạng thái chờ
     btn.innerText = "LOCAL AI ĐANG PHÂN TÍCH...";
     btn.disabled = true;
 
-    // Cấu trúc chuẩn để gọi model từ LM Studio
     const payload = {
+        model: CONFIG.MODEL_NAME,
         messages: [
-            { "role": "system", "content": "Bạn là chuyên gia Audit Marketing. Phân tích dữ liệu và trả về JSON duy nhất, không giải thích." },
-            { "role": "user", "content": `Audit cho cửa hàng: ${name}. Dữ liệu: ${data}. Trả về JSON: {"score":"62%", "pass":7, "fail":5, "details":[{"item":"Website","status":"ĐẠT","note":"Tốt"}], "advice":"Lời khuyên"}` }
+            { 
+                "role": "system", 
+                "content": "Bạn là chuyên gia Marketing của Billig Global. Phân tích dữ liệu và chỉ trả về duy nhất định dạng JSON." 
+            },
+            { 
+                "role": "user", 
+                "content": `Audit Marketing cho cửa hàng: ${name}. Dữ liệu: ${data}. 
+                Yêu cầu trả về JSON: {"score":"62%", "pass":7, "fail":5, "details":[{"item":"Website","status":"ĐẠT","note":"Nhận xét"}], "advice":"Lời khuyên"}` 
+            }
         ],
-        temperature: 0.7,
-        max_tokens: -1,
-        stream: false
+        temperature: 0.7
     };
 
     try {
@@ -27,16 +32,18 @@ async function startAudit() {
             body: JSON.stringify(payload)
         });
 
+        if (!response.ok) throw new Error("Không thể kết nối LM Studio. Hãy kiểm tra nút 'Start Server'.");
+
         const result = await response.json();
         const content = result.choices[0].message.content.replace(/```json|```/g, "").trim();
         const res = JSON.parse(content);
 
-        // Hiển thị dữ liệu (Kiểm tra kỹ ID trước khi gán để tránh lỗi null)
-        if (document.getElementById('resName')) document.getElementById('resName').innerText = name;
-        if (document.getElementById('resScore')) document.getElementById('resScore').innerText = res.score;
-        if (document.getElementById('resPass')) document.getElementById('resPass').innerText = res.pass;
-        if (document.getElementById('resFail')) document.getElementById('resFail').innerText = res.fail;
-        if (document.getElementById('resAdvice')) document.getElementById('resAdvice').innerText = "HÀNH ĐỘNG: " + res.advice;
+        // Đổ dữ liệu an toàn (Kiểm tra ID tồn tại trước khi gán)
+        updateElement('resName', name);
+        updateElement('resScore', res.score);
+        updateElement('resPass', res.pass);
+        updateElement('resFail', res.fail);
+        updateElement('resAdvice', "HÀNH ĐỘNG: " + res.advice);
         
         const tbody = document.getElementById('resBody');
         if (tbody) {
@@ -49,13 +56,23 @@ async function startAudit() {
             `).join('');
         }
 
-        if (reportArea) reportArea.style.display = 'block';
+        document.getElementById('report-area').style.display = 'block';
 
     } catch (e) {
         console.error(e);
-        alert("LỖI: Hãy chắc chắn LM Studio đang Start Server tại 127.0.0.1:1234");
+        alert("LỖI: " + e.message + "\nMẹo: Bật 'Enable CORS' trong LM Studio.");
     } finally {
         btn.innerText = "BẮT ĐẦU PHÂN TÍCH";
         btn.disabled = false;
     }
+}
+
+function updateElement(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.innerText = value;
+}
+
+function downloadPDF() {
+    const element = document.getElementById('report-area');
+    html2pdf().from(element).save('Audit-BilligGlobal.pdf');
 }
