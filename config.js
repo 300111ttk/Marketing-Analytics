@@ -1,3 +1,3 @@
 const CONFIG = {
-    GEMINI_API_KEY: "AIzaSyBpLKzttfjlZCopWefPWx7GAPv_RL9n-ag" // Chú ý: Dán mã của bạn vào giữa HAI DẤU NHÁY KÉP
+    GEMINI_API_KEY: "AIzaSyD6ECMcwhEpFQS2_ba0euAjgFSNJ0omItc"
 };
