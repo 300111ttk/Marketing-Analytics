@@ -6,406 +6,112 @@
     <title>Billig Global - Marketing Audit Tool</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        /* --- CSS Phong cách mới (Mẫu ảnh 2) --- */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 950px; margin: 0 auto; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; }
+        
+        /* Header mẫu 2 */
+        .main-header { background-color: #001f3f; color: #fff; padding: 25px 35px; }
+        .main-header h2 { margin: 0; font-size: 22px; text-transform: uppercase; letter-spacing: 1px; }
+        .main-header p { margin: 5px 0 0 0; font-size: 14px; opacity: 0.8; }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 0; /* Xóa padding để header tràn viền */
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            overflow: hidden; /* Để header bo góc theo container */
-        }
+        .input-section { padding: 30px; border-bottom: 1px solid #eee; background: #fff; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
+        button { background-color: #007bff; color: white; padding: 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; transition: 0.3s; }
+        button:hover { background-color: #0056b3; }
 
-        /* Header xanh đậm */
-        .main-header {
-            background-color: #001f3f; /* Màu xanh đậm */
-            color: #fff;
-            padding: 20px 30px;
-            margin: 0;
-        }
-
-        .main-header h2 {
-            margin: 0;
-            font-size: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .main-header p {
-            margin: 5px 0 0 0;
-            font-size: 14px;
-            opacity: 0.8;
-        }
-
-        /* Phần nhập liệu */
-        .input-section {
-            padding: 30px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box; /* Quan trọng */
-            font-size: 14px;
-        }
-
-        textarea {
-            resize: vertical;
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            width: 100%;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        /* --- Phần Kết quả Báo cáo (Mẫu 2) --- */
-        #pdf-content {
-            padding: 30px;
-        }
-
-        .report-store-name {
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 30px;
-            color: #001f3f;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 15px;
-        }
-
-        /* Khu vực điểm số */
-        .summary-container {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .summary-box {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid #eee;
-        }
-
-        .score-box {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .score-box h1 {
-            font-size: 48px;
-            margin: 0;
-            color: #007bff;
-        }
-
-        .score-box p {
-            margin: 5px 0 0 0;
-            text-transform: uppercase;
-            font-size: 12px;
-            color: #777;
-            letter-spacing: 1px;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            text-transform: uppercase;
-            color: #777;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 0;
-        }
-
+        /* Report Content */
+        #pdf-content { padding: 40px; display: none; }
+        .report-store-name { text-align: center; font-size: 20px; font-weight: bold; text-transform: uppercase; margin-bottom: 30px; color: #001f3f; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        
+        .summary-container { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .summary-box { background-color: #f8f9fa; border-radius: 8px; padding: 20px; text-align: center; border: 1px solid #eee; }
+        .score-box h1 { font-size: 54px; margin: 0; color: #007bff; }
+        .stat-value { font-size: 28px; font-weight: bold; margin: 0; }
         .pass-value { color: #28a745; }
         .fail-value { color: #dc3545; }
 
-        /* Bảng kết quả */
-        .audit-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
+        /* Table Style */
+        .audit-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px; }
+        .audit-table th, .audit-table td { text-align: left; padding: 15px; border-bottom: 1px solid #eee; }
+        .audit-table th { background-color: #f8f9fa; color: #555; text-transform: uppercase; font-size: 12px; }
+        
+        .status-tag { padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 11px; text-transform: uppercase; }
+        .status-dat { background-color: #d4edda; color: #155724; }
+        .status-chua-dat { background-color: #f8d7da; color: #721c24; }
+        .status-canh-bao { background-color: #fff3cd; color: #856404; }
 
-        .audit-table th, .audit-table td {
-            text-align: left;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-        }
+        .action-box { background-color: #fff3cd; color: #856404; padding: 20px; border-radius: 4px; border-left: 5px solid #ffeeba; font-size: 14px; margin-top: 20px; }
 
-        .audit-table th {
-            background-color: #f8f9fa;
-            color: #555;
-            text-transform: uppercase;
-            font-size: 12px;
-            letter-spacing: 1px;
-        }
-
-        /* Cột nhận xét rộng hơn */
-        .audit-table td:last-child {
-            width: 50%;
-            color: #666;
-        }
-
-        /* Tag trạng thái màu sắc */
-        .status-tag {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        .status-tag.dat {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .status-tag.chua-dat {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .status-tag.canh-bao {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-
-        /* Ô Hành động */
-        .action-box {
-            background-color: #fff3cd;
-            color: #856404;
-            padding: 15px;
-            border-radius: 4px;
-            border-left: 5px solid #ffeeba;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        .pdf-button-container {
-            text-align: center;
-            margin-top: 20px;
-            padding: 0 30px 30px 30px;
-        }
-
-        .btn-pdf {
-            background-color: #28a745;
-            width: auto;
-            display: inline-block;
-        }
-
-        .btn-pdf:hover {
-            background-color: #218838;
-        }
+        .no-pdf { padding: 0 30px 30px 30px; text-align: center; }
+        .btn-pdf { background-color: #28a745; width: auto; display: inline-block; padding: 12px 40px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="main-header">
-        <h2>COCOON NEUMARKT</h2>
-        <p>BÁO CÁO ĐÁNH GIÁ HIỆN TRẠNG DIGITAL MARKETING (CHECKLIST)</p>
+        <h2 id="header-shop-name">BILLIG GLOBAL AUDIT</h2>
+        <p>HỆ THỐNG THẨM ĐỊNH MARKETING ĐA KÊNH CHUYÊN NGHIỆP</p>
     </div>
 
-    <div class="input-section no-pdf">
+    <div class="input-section">
         <div class="input-group">
-            <label for="storeName">Tên cửa hàng & Địa chỉ:</label>
-            <input type="text" id="storeName" placeholder="VD: Cocoon Restaurant - Gartenstr 1...">
+            <label>Tên Shop/Nhà hàng:</label>
+            <input type="text" id="storeName" placeholder="VD: Cocoon Neumarkt - Gartenstr 1...">
         </div>
         <div class="input-group">
-            <label for="additionalInfo">Dữ liệu đầu vào (Links & Ghi chú):</label>
-            <textarea id="additionalInfo" rows="5" placeholder="Dán link website, facebook, ghi chú..."></textarea>
+            <label>Dữ liệu khách hàng (Dán link web, Facebook, nội dung quét được...):</label>
+            <textarea id="storeData" rows="6" placeholder="Dán thông tin quét được từ Website, Maps, Fanpage vào đây..."></textarea>
         </div>
-        <button id="btnAction" onclick="evaluateWithAI()">PHÂN TÍCH HỆ THỐNG</button>
+        <button id="btnRun" onclick="startAudit()">PHÂN TÍCH HỆ THỐNG</button>
     </div>
 
-    <div id="pdf-content" style="display: none;">
-        <div class="report-store-name" id="display-name">COCOON RESTAURANT</div>
-
+    <div id="pdf-content">
+        <div class="report-store-name" id="resStoreName">TÊN CỬA HÀNG</div>
+        
         <div class="summary-container">
             <div class="summary-box score-box">
-                <h1 id="score-val">0%</h1>
-                <p>ĐIỂM SỨC KHỎE THƯƠNG HIỆU</p>
+                <h1 id="resScore">0%</h1>
+                <p style="font-size: 12px; letter-spacing: 1px;">SỨC KHỎE MARKETING</p>
             </div>
-            <div class="summary-box dat-box">
-                <p class="stat-label">ĐẠT (PASS)</p>
-                <p class="stat-value pass-value" id="pass-val">0</p>
+            <div class="summary-box">
+                <p style="font-size: 12px; color: #777;">ĐẠT (PASS)</p>
+                <p class="stat-value pass-value" id="resPass">0</p>
             </div>
-            <div class="summary-box chua-dat-box">
-                <p class="stat-label">CHƯA ĐẠT (FAIL)</p>
-                <p class="stat-value fail-value" id="fail-val">0</p>
+            <div class="summary-box">
+                <p style="font-size: 12px; color: #777;">LỖI (FAIL)</p>
+                <p class="stat-value fail-value" id="resFail">0</p>
             </div>
         </div>
 
         <table class="audit-table">
             <thead>
                 <tr>
-                    <th>Hạng mục</th>
-                    <th>Trạng thái</th>
-                    <th>Chi tiết / Nhận xét</th>
+                    <th style="width: 30%;">Hạng mục</th>
+                    <th style="width: 15%;">Trạng thái</th>
+                    <th style="width: 55%;">Nhận xét chi tiết</th>
                 </tr>
             </thead>
-            <tbody id="audit-body">
+            <tbody id="resBody">
                 </tbody>
         </table>
 
         <div class="action-box">
-            <strong>HÀNH ĐỘNG:</strong> Để cải thiện điểm số, bạn nên tập trung vào việc xây dựng Google My Business, tạo fanpage Facebook, chạy quảng cáo và phát triển mạng lưới trên Instagram. Điều này sẽ giúp tăng nhận diện thương hiệu và thu hút khách hàng tiềm năng.
+            <strong>CHIẾN LƯỢC HÀNH ĐỘNG:</strong>
+            <p id="resAdvice" style="margin: 5px 0 0 0;"></p>
         </div>
     </div>
-    
-    <div class="pdf-button-container no-pdf" style="display: none;" id="pdf-btn-container">
-        <button class="btn-pdf" onclick="generatePDF()">TẢI BÁO CÁO PDF</button>
+
+    <div class="no-pdf" id="pdfBtnArea" style="display: none;">
+        <button class="btn-pdf" onclick="downloadPDF()">XUẤT BÁO CÁO PDF</button>
     </div>
 </div>
 
-<script>
-    /* --- JAVASCRIPT CẬP NHẬT ĐỂ ĐỔ DỮ LIỆU THEO MẪU MỚI --- */
-
-    async function evaluateWithAI() {
-        const name = document.getElementById('storeName').value;
-        const info = document.getElementById('additionalInfo').value;
-        const btn = document.getElementById('btnAction');
-
-        if(!name || !info) {
-            alert("Vui lòng nhập tên cửa hàng và dữ liệu đầu vào.");
-            return;
-        }
-
-        btn.innerText = "ĐANG PHÂN TÍCH...";
-        btn.disabled = true;
-
-        // Giả lập dữ liệu kết quả (Trong thực tế bạn sẽ gọi API AI ở đây)
-        // Dữ liệu này được thiết kế để khớp với bảng mẫu số 2
-        const mockResponse = {
-            displayName: name.toUpperCase(),
-            score: "62%",
-            pass: 7,
-            fail: 5,
-            details: [
-                { category: "Website", item: "Giao diện (UI/UX)", status: "ĐẠT", note: "Trang web có giao diện dễ sử dụng và chuyên nghiệp." },
-                { category: "SEO", item: "Tối ưu hóa cho tìm kiếm", status: "CHƯA ĐẠT", note: "Phải cải thiện các yếu tố kỹ thuật SEO như tốc độ tải trang và tối ưu hóa nội dung." },
-                { category: "Tính nghiệp", item: "Bảo mật thông tin", status: "ĐẠT", note: "Trang web có các biện pháp bảo mật thông tin khách hàng." },
-                { category: "Tính nghiệp", item: "Đánh giá và nhận xét", status: "CẢNH BÁO", note: "Nên thêm đánh giá và nhận xét từ khách hàng để tăng độ tin cậy." },
-                { category: "Hỗ trợ", item: "Đáp ứng nhu cầu hỗ trợ", status: "CHƯA ĐẠT", note: "Nếu có sự cố hoặc câu hỏi, khách hàng nên được hỗ trợ nhanh chóng và hiệu quả." },
-                { category: "Cánh xem", item: "Đa nền tảng", status: "ĐẠT", note: "Trang web có thể truy cập trên nhiều thiết bị khác nhau." }
-            ]
-        };
-
-        // Cập nhật giao diện với dữ liệu
-        document.getElementById('display-name').innerText = mockResponse.displayName;
-        document.getElementById('score-val').innerText = mockResponse.score;
-        document.getElementById('pass-val').innerText = mockResponse.pass;
-        document.getElementById('fail-val').innerText = mockResponse.fail;
-
-        const tableBody = document.getElementById('audit-body');
-        tableBody.innerHTML = ''; // Xóa nội dung cũ
-
-        let currentCategory = '';
-
-        mockResponse.details.forEach(detail => {
-            // Thêm dòng tiêu đề danh mục nếu nó thay đổi (VD: 1. WEBSITE, 2. SEO)
-            if (detail.category !== currentCategory) {
-                currentCategory = detail.category;
-                const catRow = document.createElement('tr');
-                catRow.innerHTML = `<td colspan="3" style="background-color: #f4f7f6; font-weight: bold; color: #001f3f; padding: 10px 15px;">${detail.category.toUpperCase()}</td>`;
-                tableBody.appendChild(catRow);
-            }
-
-            // Thêm dòng dữ liệu tiêu chí
-            const row = document.createElement('tr');
-            
-            // Xác định class CSS cho tag trạng thái
-            let statusClass = 'chua-dat';
-            if (detail.status === 'ĐẠT') statusClass = 'dat';
-            if (detail.status === 'CẢNH BÁO') statusClass = 'canh-bao';
-
-            row.innerHTML = `
-                <td style="padding-left: 30px;">${detail.item}</td>
-                <td><span class="status-tag ${statusClass}">${detail.status}</span></td>
-                <td>${detail.note}</td>
-            `;
-            tableBody.appendChild(row);
-        });
-
-        // Hiển thị phần kết quả và nút PDF
-        document.getElementById('pdf-content').style.display = 'block';
-        document.getElementById('pdf-btn-container').style.display = 'block';
-        
-        // Cuộn xuống phần kết quả
-        document.getElementById('pdf-content').scrollIntoView({ behavior: 'smooth' });
-
-        btn.innerText = "PHÂN TÍCH HỆ THỐNG";
-        btn.disabled = false;
-    }
-
-    function generatePDF() {
-        const element = document.getElementById('pdf-content');
-        const storeName = document.getElementById('storeName').value || 'Báo cáo';
-        
-        // Cấu hình tùy chọn PDF
-        const opt = {
-            margin:       10,
-            filename:     `Marketing_Audit_${storeName.replace(/ /g, '_')}.pdf`,
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2 }, // Tăng scale để nét hơn
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-
-        // Chạy thư viện xuất PDF
-        html2pdf().set(opt).from(element).save();
-    }
-</script>
+<script src="criteria.js"></script>
+<script src="config.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
