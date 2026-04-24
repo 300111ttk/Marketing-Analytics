@@ -2,20 +2,22 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-width=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ Thống Đánh Giá Kênh Truyền Thông</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 25px; }
         .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; }
-        input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background-color: #3498db; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; transition: background 0.3s; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; }
+        input[type="text"], textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        textarea { resize: vertical; min-height: 80px; font-family: inherit; }
+        button { width: 100%; padding: 14px; background-color: #3498db; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; margin-top: 10px; }
         button:hover { background-color: #2980b9; }
-        #result { margin-top: 20px; padding: 15px; border-radius: 4px; display: none; }
-        .dat { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .khong-dat { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        #result { margin-top: 25px; padding: 20px; border-radius: 8px; display: none; border-left: 5px solid; }
+        .dat { background-color: #e8f5e9; color: #2e7d32; border-color: #2e7d32; }
+        .khong-dat { background-color: #ffebee; color: #c62828; border-color: #c62828; }
+        .status-title { font-size: 18px; margin: 0 0 10px 0; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -39,40 +41,51 @@
         <label>Link Fanpage Facebook:</label>
         <input type="text" id="fanpage" placeholder="Nhập link hoặc để trống">
     </div>
+    <div class="form-group">
+        <label>Thông tin thêm:</label>
+        <textarea id="additionalInfo" placeholder="Ví dụ: Chưa có fanpage, chưa chạy quảng cáo..."></textarea>
+    </div>
 
     <button onclick="evaluateStore()">Đánh Giá Ngay</button>
 
     <div id="result">
-        <h3 id="statusText"></h3>
-        <p id="descriptionText"></p>
+        <p id="statusText" class="status-title"></p>
+        <p id="descriptionText" style="white-space: pre-line;"></p>
     </div>
 </div>
 
 <script>
     function evaluateStore() {
-        // 1. Lấy dữ liệu từ form
         const name = document.getElementById('storeName').value.trim();
         const website = document.getElementById('website').value.trim();
         const gmb = document.getElementById('gmb').value.trim();
         const fanpage = document.getElementById('fanpage').value.trim();
+        const info = document.getElementById('additionalInfo').value.trim().toLowerCase();
 
         let isDat = true;
         let reasons = [];
 
-        // 2. BỘ TIÊU CHÍ ĐÁNH GIÁ (Bạn có thể thay đổi luật ở đây)
-        // Ví dụ: Bắt buộc phải có Fanpage và Google Map
-        
-        if (fanpage === "") {
+        // HỆ THỐNG KIỂM TRA LOGIC
+        // 1. Kiểm tra link Fanpage
+        if (fanpage === "" || fanpage.toLowerCase() === "chưa có") {
             isDat = false;
-            reasons.push("- Cửa hàng đang thiếu Fanpage Facebook, không thể chạy quảng cáo mạng xã hội.");
-        }
-        
-        if (gmb === "") {
-            isDat = false;
-            reasons.push("- Thiếu Google Business, mất lợi thế tìm kiếm địa phương (Local SEO).");
+            reasons.push("- Thiếu Fanpage Facebook: Cần khởi tạo để chạy quảng cáo.");
         }
 
-        // 3. Hiển thị kết quả
+        // 2. Kiểm tra dựa trên ô "Thông tin thêm"
+        if (info.includes("chưa có fanpage") || info.includes("thiếu fanpage")) {
+            if (isDat) { // Nếu ở trên chưa bắt được
+                isDat = false;
+                reasons.push("- Xác nhận từ ghi chú: Cửa hàng chưa có Fanpage.");
+            }
+        }
+
+        if (gmb === "") {
+            isDat = false;
+            reasons.push("- Thiếu Google Business: Ảnh hưởng đến khả năng tìm kiếm địa phương.");
+        }
+
+        // Hiển thị kết quả
         const resultDiv = document.getElementById('result');
         const statusText = document.getElementById('statusText');
         const descText = document.getElementById('descriptionText');
@@ -82,11 +95,11 @@
         if (isDat) {
             resultDiv.className = 'dat';
             statusText.innerText = "TÌNH TRẠNG: ĐẠT ✅";
-            descText.innerText = `Tuyệt vời! ${name || 'Cửa hàng'} đã có đủ các kênh cơ bản (Fanpage, Map) để bắt đầu triển khai các chiến dịch Marketing.`;
+            descText.innerText = `Cửa hàng ${name || ''} đủ điều kiện triển khai. Hệ thống ghi nhận đầy đủ các kênh truyền thông cơ bản.`;
         } else {
             resultDiv.className = 'khong-dat';
             statusText.innerText = "TÌNH TRẠNG: KHÔNG ĐẠT ❌";
-            descText.innerText = `Cần khắc phục các vấn đề sau đối với ${name || 'cửa hàng'}:\n` + reasons.join("\n");
+            descText.innerText = `Phát hiện các điểm cần bổ sung cho ${name || 'cửa hàng'}:\n` + reasons.join("\n");
         }
     }
 </script>
