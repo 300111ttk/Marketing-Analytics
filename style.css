@@ -1,19 +1,14 @@
-:root { --blue: #1a73e8; --green: #2e7d32; --red: #c62828; }
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f9; padding: 20px; }
-.container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-h2 { color: var(--blue); text-align: center; border-bottom: 2px solid var(--blue); padding-bottom: 10px; }
-.input-group { margin-bottom: 15px; }
-label { display: block; font-weight: bold; margin-bottom: 5px; }
-input, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-.btn-analysis { width: 100%; padding: 15px; background: var(--blue); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-#btnPDF { background: var(--green); display: none; margin-top: 10px; }
-
-/* Định dạng báo cáo PDF giống mẫu Cocoon Neumarkt */
-#report-container { display: none; margin-top: 30px; padding: 20px; border: 1px solid #eee; }
-.score-box { display: flex; justify-content: space-around; background: #e8f0fe; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
-.score-box h1 { font-size: 48px; color: var(--blue); margin: 0; }
+:root { --primary: #1a73e8; --success: #2e7d32; --danger: #d93025; --gray: #5f6368; }
+body { font-family: 'Inter', sans-serif; background: #f8f9fa; padding: 20px; color: #202124; }
+.container { max-width: 850px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.header { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px; }
+input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #dadce0; border-radius: 8px; box-sizing: border-box; }
+button { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+button:hover { background: #174ea6; }
+#report-area { display: none; margin-top: 30px; border: 1px solid #eee; padding: 20px; }
+.score-box { display: flex; justify-content: space-around; background: #e8f0fe; padding: 20px; border-radius: 8px; margin: 20px 0; }
+.score-box h1 { font-size: 48px; color: var(--primary); margin: 0; }
 .audit-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-.audit-table th, .audit-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-.audit-table th { background: #f8f9fa; color: var(--blue); }
-.status-pass { color: var(--green); font-weight: bold; }
-.status-fail { color: var(--red); font-weight: bold; }
+.audit-table th, .audit-table td { border: 1px solid #e0e0e0; padding: 12px; text-align: left; }
+.status-pass { color: var(--success); font-weight: bold; }
+.status-fail { color: var(--danger); font-weight: bold; }
