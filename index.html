@@ -2,57 +2,36 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Billig Global - Marketing Auditor</title>
+    <title>Billig Global Audit Tool</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h2>HỆ THỐNG THẨM ĐỊNH MARKETING</h2>
-        
-        <div class="input-section">
-            <label>Tên cửa hàng & Địa chỉ:</label>
-            <input type="text" id="storeName" placeholder="VD: Cocoon Neumarkt...">
-            
-            <label>Dữ liệu đầu vào (Links & Ghi chú):</label>
-            <textarea id="additionalInfo" rows="6" placeholder="Dán link web, map, page..."></textarea>
-            
-            <button id="btnCheck" onclick="evaluateWithAI()">BẮT ĐẦU PHÂN TÍCH</button>
+        <div class="header">
+            <h2>BILLIG GLOBAL - MARKETING AUDIT</h2>
         </div>
+        
+        <input type="text" id="storeName" placeholder="Tên khách hàng (VD: Cocoon Neumarkt)...">
+        <textarea id="storeData" rows="5" placeholder="Dán link Website, Google Map, Fanpage..."></textarea>
+        
+        <button id="btnRun" onclick="startAudit()">BẮT ĐẦU PHÂN TÍCH</button>
 
-        <div id="loading" style="display:none; text-align:center; margin:20px; color:#1a73e8; font-weight:bold;">Hệ thống đang đối soát dữ liệu...</div>
-
-        <div id="pdf-content" style="display:none;">
-            <div class="report-header">
-                <h1 style="color: #1a73e8; text-align:center;">BÁO CÁO AUDIT MARKETING</h1>
-                <h3 id="display-name" style="text-align:center; color: #666;"></h3>
-            </div>
-
-            <div class="score-container">
-                <div class="main-score">
-                    <h1 id="score-val">--%</h1>
-                    <p>SỨC KHỎE THƯƠNG HIỆU</p>
-                </div>
-                <div class="sub-stats">
-                    <p>ĐẠT: <span id="pass-count" style="color: #2e7d32; font-weight:bold;">0</span></p>
-                    <p>LỖI: <span id="fail-count" style="color: #c62828; font-weight:bold;">0</span></p>
+        <div id="report-area">
+            <h2 id="resName" style="text-align: center;"></h2>
+            <div class="score-box">
+                <div><h1 id="resScore">0%</h1><p>ĐIỂM SỨC KHỎE</p></div>
+                <div>
+                    <p>ĐẠT: <span id="resPass" style="color:green">0</span></p>
+                    <p>LỖI: <span id="resFail" style="color:red">0</span></p>
                 </div>
             </div>
-
             <table class="audit-table">
-                <thead>
-                    <tr>
-                        <th>HẠNG MỤC</th>
-                        <th>TRẠNG THÁI</th>
-                        <th>CHI TIẾT & HÀNH ĐỘNG</th>
-                    </tr>
-                </thead>
-                <tbody id="audit-body"></tbody>
+                <thead><tr><th>Hạng mục</th><th>Trạng thái</th><th>Chi tiết</th></tr></thead>
+                <tbody id="resBody"></tbody>
             </table>
-            
-            <div id="advice-text" style="margin-top:20px; padding:15px; background:#fff9c4; border-radius:8px;"></div>
-            
-            <button id="btnDownload" onclick="downloadPDF()" style="margin-top:20px; width:100%; background:#2e7d32; color:white; border:none; padding:15px; border-radius:8px; cursor:pointer; font-weight:bold;">XUẤT BÁO CÁO PDF</button>
+            <div id="resAdvice" style="margin-top:20px; padding:15px; background:#fff9c4; border-left:5px solid #fbc02d;"></div>
+            <button onclick="downloadPDF()" style="background:var(--success); margin-top:20px;">TẢI BÁO CÁO PDF</button>
         </div>
     </div>
 
