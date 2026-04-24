@@ -1,62 +1,31 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Billig Global - Marketing Auditor</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-</head>
-<body>
-    <div class="container">
-        <h2>Hệ Thống Thẩm Định Marketing</h2>
-        
-        <div class="input-group">
-            <label>Tên Thương Hiệu:</label>
-            <input type="text" id="storeName" placeholder="VD: Cocoon Neumarkt">
+<div id="report-area" style="display:none; background: white; padding: 20px; border-radius: 8px;">
+    <h2 id="resName" style="text-align: center; border-bottom: 2px solid #1a73e8; padding-bottom: 10px;"></h2>
+    
+    <div style="display: flex; justify-content: space-around; background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+        <div style="text-align:center;">
+            <h1 id="resScore" style="font-size: 48px; color: #1a73e8; margin: 0;">0%</h1>
+            <p>SỨC KHỎE MARKETING</p>
         </div>
-        
-        <div class="input-group">
-            <label>Dữ liệu tổng hợp (Link Web, GMB, Social):</label>
-            <textarea id="storeData" rows="6" placeholder="Dán các thông tin quan sát được tại đây..."></textarea>
-        </div>
-        
-        <button id="btnRun" onclick="startAudit()">PHÂN TÍCH HỆ THỐNG</button>
-
-        <div id="report-area">
-            <h3 id="resName" style="text-align: center; color: #333;"></h3>
-            
-            <div class="score-card">
-                <div class="score-circle">
-                    <h1 id="resScore">0%</h1>
-                    <p>ĐIỂM SỨC KHỎE</p>
-                </div>
-                <div class="stats">
-                    <p>✅ Đạt: <span id="resPass" style="color:green; font-weight:bold;">0</span></p>
-                    <p>❌ Lỗi: <span id="resFail" style="color:red; font-weight:bold;">0</span></p>
-                </div>
-            </div>
-
-            <table class="audit-table">
-                <thead>
-                    <tr>
-                        <th style="width: 30%;">HẠNG MỤC CHI TIẾT</th>
-                        <th style="width: 15%;">TRẠNG THÁI</th>
-                        <th>NHẬN XÉT & HÀNH ĐỘNG</th>
-                    </tr>
-                </thead>
-                <tbody id="resBody"></tbody>
-            </table>
-
-            <div class="advice-box">
-                <strong>💡 CHIẾN LƯỢC ĐỀ XUẤT:</strong>
-                <p id="resAdvice"></p>
-            </div>
-
-            <button onclick="downloadPDF()" style="background:var(--success); margin-top:25px;">XUẤT BÁO CÁO (PDF)</button>
+        <div style="display: flex; flex-direction: column; justify-content: center;">
+            <p>✅ ĐẠT: <span id="resPass" style="color: green; font-weight: bold;">0</span></p>
+            <p>❌ LỖI: <span id="resFail" style="color: red; font-weight: bold;">0</span></p>
         </div>
     </div>
 
-    <script src="config.js"></script>
-    <script src="script.js"></script>
-</body>
-</html>
+    <table border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+        <thead style="background: #eee;">
+            <tr>
+                <th style="padding: 10px;">NHÓM</th>
+                <th>TIÊU CHÍ</th>
+                <th>TRẠNG THÁI</th>
+                <th>NHẬN XÉT CHI TIẾT</th>
+            </tr>
+        </thead>
+        <tbody id="resBody"></tbody>
+    </table>
+
+    <div style="background: #fff9c4; padding: 15px; border-left: 5px solid #fbc02d;">
+        <strong>💡 CHIẾN LƯỢC TỪ CHUYÊN GIA:</strong>
+        <p id="resAdvice"></p>
+    </div>
+</div>
