@@ -2,36 +2,57 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Billig Global Audit Tool</title>
+    <title>Billig Global - Marketing Auditor</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h2>BILLIG GLOBAL - MARKETING AUDIT</h2>
+        <h2>Hệ Thống Thẩm Định Marketing</h2>
+        
+        <div class="input-group">
+            <label>Tên Thương Hiệu:</label>
+            <input type="text" id="storeName" placeholder="VD: Cocoon Neumarkt">
         </div>
         
-        <input type="text" id="storeName" placeholder="Tên khách hàng (VD: Cocoon Neumarkt)...">
-        <textarea id="storeData" rows="5" placeholder="Dán link Website, Google Map, Fanpage..."></textarea>
+        <div class="input-group">
+            <label>Dữ liệu tổng hợp (Link Web, GMB, Social):</label>
+            <textarea id="storeData" rows="6" placeholder="Dán các thông tin quan sát được tại đây..."></textarea>
+        </div>
         
-        <button id="btnRun" onclick="startAudit()">BẮT ĐẦU PHÂN TÍCH</button>
+        <button id="btnRun" onclick="startAudit()">PHÂN TÍCH HỆ THỐNG</button>
 
         <div id="report-area">
-            <h2 id="resName" style="text-align: center;"></h2>
-            <div class="score-box">
-                <div><h1 id="resScore">0%</h1><p>ĐIỂM SỨC KHỎE</p></div>
-                <div>
-                    <p>ĐẠT: <span id="resPass" style="color:green">0</span></p>
-                    <p>LỖI: <span id="resFail" style="color:red">0</span></p>
+            <h3 id="resName" style="text-align: center; color: #333;"></h3>
+            
+            <div class="score-card">
+                <div class="score-circle">
+                    <h1 id="resScore">0%</h1>
+                    <p>ĐIỂM SỨC KHỎE</p>
+                </div>
+                <div class="stats">
+                    <p>✅ Đạt: <span id="resPass" style="color:green; font-weight:bold;">0</span></p>
+                    <p>❌ Lỗi: <span id="resFail" style="color:red; font-weight:bold;">0</span></p>
                 </div>
             </div>
+
             <table class="audit-table">
-                <thead><tr><th>Hạng mục</th><th>Trạng thái</th><th>Chi tiết</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">HẠNG MỤC CHI TIẾT</th>
+                        <th style="width: 15%;">TRẠNG THÁI</th>
+                        <th>NHẬN XÉT & HÀNH ĐỘNG</th>
+                    </tr>
+                </thead>
                 <tbody id="resBody"></tbody>
             </table>
-            <div id="resAdvice" style="margin-top:20px; padding:15px; background:#fff9c4; border-left:5px solid #fbc02d;"></div>
-            <button onclick="downloadPDF()" style="background:var(--success); margin-top:20px;">TẢI BÁO CÁO PDF</button>
+
+            <div class="advice-box">
+                <strong>💡 CHIẾN LƯỢC ĐỀ XUẤT:</strong>
+                <p id="resAdvice"></p>
+            </div>
+
+            <button onclick="downloadPDF()" style="background:var(--success); margin-top:25px;">XUẤT BÁO CÁO (PDF)</button>
         </div>
     </div>
 
