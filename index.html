@@ -1,173 +1,53 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">A
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Billig Global - Marketing Auditor Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Billig Global - Auditor Pro</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <style>
-        :root { --primary: #1a73e8; --success: #2e7d32; --error: #c62828; --bg: #f8f9fa; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); margin: 0; padding: 20px; }
-        .container { max-width: 850px; margin: 0 auto; background: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
-        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid var(--primary); padding-bottom: 20px; }
-        .header h2 { color: var(--primary); margin: 0; font-size: 26px; }
-        .section { margin-bottom: 20px; }
-        label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; color: #3c4043; }
-        input, textarea { width: 100%; padding: 14px; border: 1px solid #dadce0; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
-        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-        button { flex: 1; padding: 16px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        #btnCheck { background-color: var(--primary); color: white; }
-        #btnDownload { background-color: #34a853; color: white; display: none; }
-        button:disabled { background-color: #bdc1c6; cursor: not-allowed; }
-        
-        #pdf-content { margin-top: 30px; display: none; padding: 30px; border: 1px solid #eee; background: white; }
-        .audit-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .audit-table th, .audit-table td { border: 1px solid #dee2e6; padding: 12px; text-align: left; font-size: 13px; }
-        .audit-table th { background-color: #f8f9fa; color: #1a73e8; }
-        .status-pass { color: var(--success); font-weight: bold; }
-        .status-fail { color: var(--error); font-weight: bold; }
-        .score-container { display: flex; justify-content: space-between; align-items: center; background: #e8f0fe; padding: 25px; border-radius: 12px; margin-bottom: 25px; }
-        .score-main { text-align: center; }
-        .score-main h1 { margin: 0; font-size: 48px; color: var(--primary); }
-        .score-details { display: flex; gap: 30px; }
-        .score-item { text-align: center; }
-        .score-item h4 { margin: 0; font-size: 12px; color: #5f6368; text-transform: uppercase; }
-        .score-item p { margin: 5px 0 0; font-size: 20px; font-weight: bold; }
-    </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="header">
-        <h2>BÁO CÁO ĐÁNH GIÁ HIỆN TRẠNG DIGITAL MARKETING</h2>
-        <p>Hệ thống tự động thẩm định dữ liệu Billig Global</p>
-    </div>
-
-    <div class="section">
-        <label>TÊN CỬA HÀNG & ĐỊA CHỈ:</label>
-        <input type="text" id="storeName" placeholder="Ví dụ: Cocoon Neumarkt - Gartenstr 1...">
-    </div>
-    
-    <div class="section">
-        <label>DỮ LIỆU ĐẦU VÀO (Links & Ghi chú):</label>
-        <textarea id="additionalInfo" placeholder="Dán link Website, Google Business, Fanpage và ghi chú hiện trạng..."></textarea>
-    </div>
-
-    <div class="btn-group">
-        <button id="btnCheck" onclick="evaluateWithAI()">PHÂN TÍCH HỆ THỐNG</button>
-        <button id="btnDownload" onclick="downloadPDF()">TẢI BÁO CÁO PDF</button>
-    </div>
-    
-    <div id="loading" style="display:none; text-align:center; margin:20px; color:var(--primary); font-weight:bold;">Đang tạo báo cáo chuyên sâu...</div>
-
-    <div id="pdf-content">
-        <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #1a73e8; margin: 0; font-size: 28px;">BÁO CÁO AUDIT MARKETING</h1>
-            <h2 id="display-name" style="color: #5f6368; margin-top: 10px;">Tên cửa hàng</h2>
+    <div class="container">
+        <div class="header">
+            <h2 style="color: #1a73e8;">HỆ THỐNG THẨM ĐỊNH MARKETING</h2>
         </div>
 
-        <div class="score-container">
-            <div class="score-main">
-                <h1 id="score-val">--%</h1>
-                <p style="margin:0; font-size:12px; font-weight:bold; color:#5f6368;">ĐIỂM SỨC KHỎE THƯƠNG HIỆU</p>
-            </div>
-            <div class="score-details">
-                <div class="score-item"><h4>TỔNG TIÊU CHÍ</h4><p>12</p></div>
-                <div class="score-item"><h4>ĐẠT</h4><p id="pass-count" style="color: var(--success);">0</p></div>
-                <div class="score-item"><h4>CHƯA ĐẠT</h4><p id="fail-count" style="color: var(--error);">0</p></div>
-            </div>
+        <div class="section">
+            <label>TÊN CỬA HÀNG:</label>
+            <input type="text" id="storeName" placeholder="Tên khách hàng/Cửa hàng...">
         </div>
-
-        <table class="audit-table">
-            <thead>
-                <tr>
-                    <th style="width: 30%;">HẠNG MỤC / TIÊU CHÍ</th>
-                    <th style="width: 15%;">TRẠNG THÁI</th>
-                    <th>NHẬN XÉT & HÀNH ĐỘNG</th>
-                </tr>
-            </thead>
-            <tbody id="audit-body"></tbody>
-        </table>
         
-        <div id="ai-advice" style="margin-top: 25px; padding: 20px; background: #fff9c4; border-radius: 10px; font-size: 14px; border: 1px solid #fbc02d;">
-            <strong style="color: #f57f17;">LỜI KHUYÊN CHIẾN LƯỢC:</strong> <span id="advice-text"></span>
+        <div class="section">
+            <label>DỮ LIỆU ĐẦU VÀO (LINKS & GHI CHÚ):</label>
+            <textarea id="additionalInfo" placeholder="Dán thông tin khách hàng tại đây..."></textarea>
+        </div>
+
+        <div class="btn-group">
+            <button id="btnCheck" onclick="evaluateWithAI()">PHÂN TÍCH HỆ THỐNG</button>
+            <button id="btnDownload" onclick="downloadPDF()">TẢI BÁO CÁO PDF</button>
+        </div>
+        
+        <div id="loading" style="display:none; text-align:center; margin:20px; font-weight:bold; color:#1a73e8;">Đang xử lý dữ liệu...</div>
+
+        <div id="pdf-content">
+            <h1 style="text-align:center; color: #1a73e8;">BÁO CÁO AUDIT MARKETING</h1>
+            <h3 id="display-name" style="text-align:center; color: #5f6368;"></h3>
+            <div class="score-row">
+                <div><h1 id="score-val" style="margin:0; color:#1a73e8;">--%</h1><p style="margin:0; font-size:12px;">SỨC KHỎE THƯƠNG HIỆU</p></div>
+                <div style="text-align:right;">
+                    <p>ĐẠT: <strong id="pass-count" style="color:green">0</strong></p>
+                    <p>LỖI: <strong id="fail-count" style="color:red">0</strong></p>
+                </div>
+            </div>
+            <table class="audit-table">
+                <thead><tr><th>HẠNG MỤC</th><th>TRẠNG THÁI</th><th>CHI TIẾT & HÀNH ĐỘNG</th></tr></thead>
+                <tbody id="audit-body"></tbody>
+            </table>
+            <div id="advice-text" style="margin-top:25px; padding:15px; background:#fff9c4; border-radius:8px; border-left: 5px solid #fbc02d;"></div>
         </div>
     </div>
-</div>
 
-<script>
-    // DÁN MÃ API CỦA BẠN VÀO ĐÂY ĐỂ BẮT ĐẦU
-    const GEMINI_API_KEY = "AIzaSyAnu9v35NRsK_3eI_bh1gv6p3l9txtDx0Q";
-
-    async function evaluateWithAI() {
-        const name = document.getElementById('storeName').value.trim();
-        const info = document.getElementById('additionalInfo').value.trim();
-        const btn = document.getElementById('btnCheck');
-        const loading = document.getElementById('loading');
-        const pdfArea = document.getElementById('pdf-content');
-
-        if(!name || !info) { alert("Vui lòng nhập đầy đủ thông tin!"); return; }
-        btn.disabled = true; loading.style.display = 'block'; pdfArea.style.display = 'none';
-
-        const prompt = `
-            Đóng vai chuyên gia Audit Marketing. Phân tích cửa hàng: ${name} dựa trên dữ liệu: ${info}.
-            Sử dụng bộ tiêu chí cố định:
-            - Website: Giao diện (UI/UX), NAP khớp GMB, Bản đồ, Đặt bàn (<1ph), Đa kênh, Digital Menu, GDPR.
-            - GMB: SEO Profile, Review (>4.3, phản hồi chuyên nghiệp), Ảnh (>20 ảnh thực tế, có video), Nút hành động.
-            - Social: Profile tối ưu, Nội dung (1-2 Reels/tuần), Nút WhatsApp.
-
-            Trả về duy nhất mã JSON theo cấu trúc (không giải thích):
-            {
-              "score": "số %", "pass_count": "số tiêu chí đạt", "fail_count": "số tiêu chí chưa đạt",
-              "details": [
-                {"criteria": "1. WEBSITE - Giao diện", "status": "ĐẠT/CHƯA ĐẠT", "comment": "Nhận xét cụ thể"},
-                {"criteria": "2. WEBSITE - Pháp lý (GDPR)", "status": "ĐẠT/CHƯA ĐẠT", "comment": "Nhận xét cụ thể"},
-                {"criteria": "3. GOOGLE - Local SEO", "status": "ĐẠT/CHƯA ĐẠT", "comment": "Nhận xét cụ thể"},
-                {"criteria": "4. GOOGLE - Uy tín/Review", "status": "ĐẠT/CHƯA ĐẠT", "comment": "Nhận xét cụ thể"},
-                {"criteria": "5. SOCIAL - Nội dung Reels", "status": "ĐẠT/CHƯA ĐẠT", "comment": "Nhận xét cụ thể"}
-              ],
-              "advice": "Lời khuyên tổng quát dựa trên hiện trạng"
-            }
-        `;
-
-        try {
-            const response = await fetch(\`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=\${GEMINI_API_KEY}\`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-            });
-
-            const data = await response.json();
-            const result = JSON.parse(data.candidates[0].content.parts[0].text.replace(/\\`\\`\\`json|\\`\\`\\`/g, ""));
-
-            document.getElementById('display-name').innerText = name;
-            document.getElementById('score-val').innerText = result.score;
-            document.getElementById('pass-count').innerText = result.pass_count;
-            document.getElementById('fail-count').innerText = result.fail_count;
-            document.getElementById('advice-text').innerText = result.advice;
-
-            const tbody = document.getElementById('audit-body');
-            tbody.innerHTML = "";
-            result.details.forEach(item => {
-                const statusClass = item.status === "ĐẠT" ? "status-pass" : "status-fail";
-                tbody.innerHTML += \`<tr><td>\${item.criteria}</td><td class="\${statusClass}">\${item.status}</td><td>\${item.comment}</td></tr>\`;
-            });
-
-            pdfArea.style.display = 'block';
-            document.getElementById('btnDownload').style.display = 'block';
-        } catch (error) {
-            alert("Lỗi phân tích hệ thống. Vui lòng kiểm tra lại API Key.");
-        } finally {
-            btn.disabled = false; loading.style.display = 'none';
-        }
-    }
-
-    function downloadPDF() {
-        const element = document.getElementById('pdf-content');
-        const storeName = document.getElementById('storeName').value || 'Bao-cao-Audit';
-        html2pdf().set({ margin: 10, filename: \`Audit-Marketing-\${storeName}.pdf\`, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(element).save();
-    }
-</script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
