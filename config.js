@@ -1,3 +1,4 @@
 const CONFIG = {
-    GEMINI_API_KEY: "AIzaSyD6ECMcwhEpFQS2_ba0euAjgFSNJ0omItc"
+    // Địa chỉ server mặc định của LM Studio
+    API_URL: "http://localhost:1234/v1/chat/completions"
 };
