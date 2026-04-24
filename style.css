@@ -1,14 +1,32 @@
-:root { --primary: #1a73e8; --success: #2e7d32; --danger: #d93025; --gray: #5f6368; }
-body { font-family: 'Inter', sans-serif; background: #f8f9fa; padding: 20px; color: #202124; }
-.container { max-width: 850px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-.header { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px; }
-input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #dadce0; border-radius: 8px; box-sizing: border-box; }
-button { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-button:hover { background: #174ea6; }
-#report-area { display: none; margin-top: 30px; border: 1px solid #eee; padding: 20px; }
-.score-box { display: flex; justify-content: space-around; background: #e8f0fe; padding: 20px; border-radius: 8px; margin: 20px 0; }
-.score-box h1 { font-size: 48px; color: var(--primary); margin: 0; }
-.audit-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-.audit-table th, .audit-table td { border: 1px solid #e0e0e0; padding: 12px; text-align: left; }
-.status-pass { color: var(--success); font-weight: bold; }
-.status-fail { color: var(--danger); font-weight: bold; }
+:root { 
+    --primary: #1a73e8; 
+    --success: #1e8e3e; 
+    --danger: #d93025; 
+    --bg: #f8f9fa;
+}
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+.container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+h2 { color: var(--primary); text-align: center; text-transform: uppercase; letter-spacing: 1px; }
+
+/* Input Section */
+.input-group { margin-bottom: 20px; }
+input, textarea { width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+button { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+button:hover { background: #1557b0; }
+
+/* Result Section */
+#report-area { display: none; margin-top: 40px; padding: 20px; border-top: 3px solid var(--primary); }
+.score-card { display: flex; align-items: center; justify-content: space-around; background: #f1f3f4; padding: 20px; border-radius: 10px; margin-bottom: 25px; }
+.score-circle { text-align: center; }
+.score-circle h1 { font-size: 50px; color: var(--primary); margin: 0; }
+
+/* Table */
+.audit-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+.audit-table th { background: #f8f9fa; padding: 12px; text-align: left; border-bottom: 2px solid #eee; font-size: 13px; color: #5f6368; }
+.audit-table td { padding: 15px 12px; border-bottom: 1px solid #eee; font-size: 14px; vertical-align: top; }
+.status-tag { padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 11px; white-space: nowrap; }
+.pass { background: #e6f4ea; color: var(--success); }
+.fail { background: #fce8e6; color: var(--danger); }
+
+/* Advice Box */
+.advice-box { background: #fff9c4; border-left: 5px solid #fbc02d; padding: 15px; margin-top: 20px; line-height: 1.6; }
