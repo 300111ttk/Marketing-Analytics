@@ -2,48 +2,57 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Billig Global - Auditor Pro</title>
+    <title>Billig Global - Marketing Auditor</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h2 style="color: #1a73e8;">HỆ THỐNG THẨM ĐỊNH MARKETING</h2>
-        </div>
-
-        <div class="section">
-            <label>TÊN CỬA HÀNG:</label>
-            <input type="text" id="storeName" placeholder="Tên khách hàng/Cửa hàng...">
-        </div>
+        <h2>HỆ THỐNG THẨM ĐỊNH MARKETING</h2>
         
-        <div class="section">
-            <label>DỮ LIỆU ĐẦU VÀO (LINKS & GHI CHÚ):</label>
-            <textarea id="additionalInfo" placeholder="Dán thông tin khách hàng tại đây..."></textarea>
+        <div class="input-section">
+            <label>Tên cửa hàng & Địa chỉ:</label>
+            <input type="text" id="storeName" placeholder="VD: Cocoon Neumarkt...">
+            
+            <label>Dữ liệu đầu vào (Links & Ghi chú):</label>
+            <textarea id="additionalInfo" rows="6" placeholder="Dán link web, map, page..."></textarea>
+            
+            <button id="btnCheck" onclick="evaluateWithAI()">BẮT ĐẦU PHÂN TÍCH</button>
         </div>
 
-        <div class="btn-group">
-            <button id="btnCheck" onclick="evaluateWithAI()">PHÂN TÍCH HỆ THỐNG</button>
-            <button id="btnDownload" onclick="downloadPDF()">TẢI BÁO CÁO PDF</button>
-        </div>
-        
-        <div id="loading" style="display:none; text-align:center; margin:20px; font-weight:bold; color:#1a73e8;">Đang xử lý dữ liệu...</div>
+        <div id="loading" style="display:none; text-align:center; margin:20px; color:#1a73e8; font-weight:bold;">Hệ thống đang đối soát dữ liệu...</div>
 
-        <div id="pdf-content">
-            <h1 style="text-align:center; color: #1a73e8;">BÁO CÁO AUDIT MARKETING</h1>
-            <h3 id="display-name" style="text-align:center; color: #5f6368;"></h3>
-            <div class="score-row">
-                <div><h1 id="score-val" style="margin:0; color:#1a73e8;">--%</h1><p style="margin:0; font-size:12px;">SỨC KHỎE THƯƠNG HIỆU</p></div>
-                <div style="text-align:right;">
-                    <p>ĐẠT: <strong id="pass-count" style="color:green">0</strong></p>
-                    <p>LỖI: <strong id="fail-count" style="color:red">0</strong></p>
+        <div id="pdf-content" style="display:none;">
+            <div class="report-header">
+                <h1 style="color: #1a73e8; text-align:center;">BÁO CÁO AUDIT MARKETING</h1>
+                <h3 id="display-name" style="text-align:center; color: #666;"></h3>
+            </div>
+
+            <div class="score-container">
+                <div class="main-score">
+                    <h1 id="score-val">--%</h1>
+                    <p>SỨC KHỎE THƯƠNG HIỆU</p>
+                </div>
+                <div class="sub-stats">
+                    <p>ĐẠT: <span id="pass-count" style="color: #2e7d32; font-weight:bold;">0</span></p>
+                    <p>LỖI: <span id="fail-count" style="color: #c62828; font-weight:bold;">0</span></p>
                 </div>
             </div>
+
             <table class="audit-table">
-                <thead><tr><th>HẠNG MỤC</th><th>TRẠNG THÁI</th><th>CHI TIẾT & HÀNH ĐỘNG</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>HẠNG MỤC</th>
+                        <th>TRẠNG THÁI</th>
+                        <th>CHI TIẾT & HÀNH ĐỘNG</th>
+                    </tr>
+                </thead>
                 <tbody id="audit-body"></tbody>
             </table>
-            <div id="advice-text" style="margin-top:25px; padding:15px; background:#fff9c4; border-radius:8px; border-left: 5px solid #fbc02d;"></div>
+            
+            <div id="advice-text" style="margin-top:20px; padding:15px; background:#fff9c4; border-radius:8px;"></div>
+            
+            <button id="btnDownload" onclick="downloadPDF()" style="margin-top:20px; width:100%; background:#2e7d32; color:white; border:none; padding:15px; border-radius:8px; cursor:pointer; font-weight:bold;">XUẤT BÁO CÁO PDF</button>
         </div>
     </div>
 
