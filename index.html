@@ -2,172 +2,94 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Marketing Auditor - Bản Ổn Định</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-width=1.0">
+    <title>Hệ Thống Đánh Giá Kênh Truyền Thông</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #3498db; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; transition: background 0.3s; }
+        button:hover { background-color: #2980b9; }
+        #result { margin-top: 20px; padding: 15px; border-radius: 4px; display: none; }
+        .dat { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .khong-dat { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
 </head>
 <body>
-    <div id="root"></div>
 
-    <script type="text/babel">
-        const { useState } = React;
+<div class="container">
+    <h2>Kiểm Tra Điều Kiện Kênh MKT</h2>
+    
+    <div class="form-group">
+        <label>Tên cửa hàng:</label>
+        <input type="text" id="storeName" placeholder="VD: Cocoon Restaurant...">
+    </div>
+    <div class="form-group">
+        <label>Link Website:</label>
+        <input type="text" id="website" placeholder="Nhập link hoặc để trống">
+    </div>
+    <div class="form-group">
+        <label>Link Google Business (Map):</label>
+        <input type="text" id="gmb" placeholder="Nhập link hoặc để trống">
+    </div>
+    <div class="form-group">
+        <label>Link Fanpage Facebook:</label>
+        <input type="text" id="fanpage" placeholder="Nhập link hoặc để trống">
+    </div>
 
-        // 1. CẤU HÌNH API
-        const API_KEY = "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY"; 
-        const MODEL_NAME = "gemini-3.1-flash"; 
+    <button onclick="evaluateStore()">Đánh Giá Ngay</button>
 
-        // 2. ICON
-        const Sparkles = ({ size = 24 }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>);
-        const ChevronRight = ({ size = 24 }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>);
-        const Loader2 = ({ className, size = 24 }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>);
-        const BarChart3 = ({ size = 24 }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>);
-        const Printer = ({ size = 24 }) => (<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2-2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V2h12v7"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>);
+    <div id="result">
+        <h3 id="statusText"></h3>
+        <p id="descriptionText"></p>
+    </div>
+</div>
 
-        // 3. MAIN APP
-        const App = () => {
-            const [step, setStep] = useState('input');
-            const [formData, setFormData] = useState({ brandName: '', website: '', facebook: '', description: '' });
-            const [auditResult, setAuditResult] = useState(null);
-            const [error, setError] = useState(null);
+<script>
+    function evaluateStore() {
+        // 1. Lấy dữ liệu từ form
+        const name = document.getElementById('storeName').value.trim();
+        const website = document.getElementById('website').value.trim();
+        const gmb = document.getElementById('gmb').value.trim();
+        const fanpage = document.getElementById('fanpage').value.trim();
 
-            const handleStartAudit = async () => {
-                if (!API_KEY || API_KEY === "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY") {
-                    setError("Vui lòng dán API Key vào mã nguồn."); return;
-                }
-                if (!formData.brandName) {
-                    setError("Vui lòng nhập tên thương hiệu."); return;
-                }
-                
-                setStep('loading');
-                setError(null);
+        let isDat = true;
+        let reasons = [];
 
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
-                const prompt = `Bạn là CMO chuyên nghiệp. Đánh giá chiến lược Marketing cho: ${formData.brandName}. Web: ${formData.website}, FB: ${formData.facebook}. Trả về JSON: {"brandName": "${formData.brandName}", "overallScore": 85, "totalCriteria": 10, "passed": 7, "failed": 3, "strategicNote": "...", "categories": [{"name": "Tổng quan", "items": [{"label": "UX", "status": "PASS", "comment": "Tốt"}]}]}`;
+        // 2. BỘ TIÊU CHÍ ĐÁNH GIÁ (Bạn có thể thay đổi luật ở đây)
+        // Ví dụ: Bắt buộc phải có Fanpage và Google Map
+        
+        if (fanpage === "") {
+            isDat = false;
+            reasons.push("- Cửa hàng đang thiếu Fanpage Facebook, không thể chạy quảng cáo mạng xã hội.");
+        }
+        
+        if (gmb === "") {
+            isDat = false;
+            reasons.push("- Thiếu Google Business, mất lợi thế tìm kiếm địa phương (Local SEO).");
+        }
 
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: prompt }] }],
-                            generationConfig: { responseMimeType: "application/json" }
-                        })
-                    });
+        // 3. Hiển thị kết quả
+        const resultDiv = document.getElementById('result');
+        const statusText = document.getElementById('statusText');
+        const descText = document.getElementById('descriptionText');
 
-                    const resData = await response.json();
-                    if (!response.ok) throw new Error(resData.error?.message || "Lỗi AI");
+        resultDiv.style.display = 'block';
 
-                    const resultText = resData.candidates[0].content.parts[0].text;
-                    setAuditResult(JSON.parse(resultText));
-                    setStep('result');
-                } catch (err) {
-                    setError("Lỗi kết nối: " + err.message);
-                    setStep('input');
-                }
-            };
+        if (isDat) {
+            resultDiv.className = 'dat';
+            statusText.innerText = "TÌNH TRẠNG: ĐẠT ✅";
+            descText.innerText = `Tuyệt vời! ${name || 'Cửa hàng'} đã có đủ các kênh cơ bản (Fanpage, Map) để bắt đầu triển khai các chiến dịch Marketing.`;
+        } else {
+            resultDiv.className = 'khong-dat';
+            statusText.innerText = "TÌNH TRẠNG: KHÔNG ĐẠT ❌";
+            descText.innerText = `Cần khắc phục các vấn đề sau đối với ${name || 'cửa hàng'}:\n` + reasons.join("\n");
+        }
+    }
+</script>
 
-            const StatusPill = ({ status }) => {
-                const isPass = status === 'PASS';
-                return (
-                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold inline-block uppercase ${isPass ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
-                        {isPass ? 'ĐẠT' : 'CHƯA ĐẠT'}
-                    </span>
-                );
-            };
-
-            return (
-                <div className="min-h-screen bg-slate-50 font-sans text-slate-900 p-6">
-                    <style dangerouslySetInnerHTML={{ __html: `
-                        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-                        body { font-family: 'Inter', sans-serif; }
-                        @media print {
-                            body { background-color: white !important; }
-                            .no-print { display: none !important; }
-                        }
-                    `}} />
-
-                    {step === 'input' && (
-                        <div className="max-w-2xl mx-auto pt-10">
-                            <div className="text-center mb-10">
-                                <div className="inline-flex p-3 bg-indigo-600 rounded-2xl mb-4 text-white shadow-lg"><Sparkles size={32} /></div>
-                                <h1 className="text-3xl font-bold text-slate-900">AI Marketing Auditor</h1>
-                            </div>
-
-                            <div className="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 space-y-5">
-                                <div>
-                                    <label className="block text-sm font-semibold mb-2">Tên thương hiệu *</label>
-                                    <input type="text" className="w-full px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-indigo-500" value={formData.brandName} onChange={e => setFormData({...formData, brandName: e.target.value})} />
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-semibold mb-2">Website</label>
-                                        <input type="url" className="w-full px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-indigo-500" value={formData.website} onChange={e => setFormData({...formData, website: e.target.value})} />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-semibold mb-2">Facebook</label>
-                                        <input type="url" className="w-full px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-indigo-500" value={formData.facebook} onChange={e => setFormData({...formData, facebook: e.target.value})} />
-                                    </div>
-                                </div>
-                                {error && <p className="text-rose-600 text-sm font-semibold italic bg-rose-50 p-3 rounded-lg">{error}</p>}
-                                <button onClick={handleStartAudit} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all">
-                                    Bắt đầu đánh giá ngay <ChevronRight />
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    {step === 'loading' && (
-                        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-                            <Loader2 className="text-indigo-600 animate-spin mb-4" size={64} />
-                            <h2 className="text-2xl font-bold">AI đang phân tích...</h2>
-                        </div>
-                    )}
-
-                    {step === 'result' && auditResult && (
-                        <div className="max-w-5xl mx-auto py-10">
-                            <button onClick={() => setStep('input')} className="text-indigo-600 font-bold mb-6 no-print">← Quay lại</button>
-                            
-                            <div className="bg-[#0B1C3E] text-white p-10 rounded-t-3xl flex justify-between items-center">
-                                <h1 className="text-4xl font-black uppercase">{auditResult.brandName}</h1>
-                                <div className="text-6xl font-black text-[#FF6B00]">{auditResult.overallScore}%</div>
-                            </div>
-
-                            <div className="bg-white p-8 rounded-b-3xl shadow-xl border">
-                                <p className="text-slate-600 italic text-lg mb-8 border-l-4 border-orange-500 pl-4">{auditResult.strategicNote}</p>
-                                
-                                <table className="w-full text-left border-collapse">
-                                    <thead>
-                                        <tr className="bg-slate-50 border-b text-xs uppercase text-slate-500">
-                                            <th className="p-4">Tiêu chí</th><th className="p-4 text-center">Trạng thái</th><th className="p-4">Nhận xét</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y">
-                                        {auditResult.categories && auditResult.categories.map((cat, i) => cat.items.map((item, j) => (
-                                            <tr key={`${i}-${j}`} className="hover:bg-slate-50">
-                                                <td className="p-4 font-bold text-sm">{item.label}</td>
-                                                <td className="p-4 text-center"><StatusPill status={item.status} /></td>
-                                                <td className="p-4 text-sm text-slate-600 italic">{item.comment}</td>
-                                            </tr>
-                                        )))}
-                                    </tbody>
-                                </table>
-
-                                <div className="mt-10 text-center no-print">
-                                    <button onClick={() => window.print()} className="bg-indigo-600 text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 mx-auto"><Printer /> Xuất báo cáo PDF</button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
 </body>
 </html>
