@@ -1,4 +1,4 @@
 const CONFIG = {
-    // Địa chỉ server mặc định của LM Studio
-    API_URL: "http://localhost:1234/v1/chat/completions"
+    // Địa chỉ từ LM Studio của bạn
+    LOCAL_API_URL: "http://127.0.0.1:1234/v1/chat/completions"
 };
