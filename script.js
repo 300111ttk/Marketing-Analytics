@@ -5,27 +5,26 @@ async function startAudit() {
 
     if (!name || !data) return alert("Vui lòng nhập đủ thông tin!");
 
-    btn.innerText = "HỆ THỐNG ĐANG PHÂN TÍCH...";
+    btn.innerText = "HỆ THỐNG ĐANG ĐỐI SOÁT...";
     btn.disabled = true;
 
-    // Chú ý: CONFIG.GEMINI_API_KEY phải khớp với file config.js của bạn
+    // SỬA LỖI TẠI ĐÂY: Đảm bảo gọi đúng tên GEMINI_API_URL từ config.js
     const apiKey = CONFIG.GEMINI_API_KEY; 
-    const apiUrl = CONFIG.GEMINI_URL;
+    const apiUrl = CONFIG.GEMINI_API_URL; 
 
-    const prompt = `Bạn là chuyên gia Marketing tại Billig Global.
-    Hãy đối soát khách hàng [${name}] dựa trên dữ liệu này: [${data}].
-    
-    Yêu cầu: Phân tích dựa trên các tiêu chí cố định: ${JSON.stringify(AUDIT_CRITERIA)}
+    const prompt = `Bạn là chuyên gia thẩm định Marketing tại Billig Global.
+    Nhiệm vụ: Phân tích khách hàng [${name}] dựa trên dữ liệu: [${data}].
+    QUY TẮC: Phải đối soát thực tế theo từng mục trong tiêu chí sau: ${JSON.stringify(AUDIT_CRITERIA)}
 
-    Kết quả trả về định dạng JSON:
+    YÊU CẦU TRẢ VỀ JSON DUY NHẤT:
     {
       "score": "Số %",
       "pass": "Số mục đạt",
       "fail": "Số mục lỗi",
       "details": [
-        {"group": "Nhóm tiêu chí", "item": "Tên mục", "status": "ĐẠT/CHƯA ĐẠT/CẢNH BÁO", "note": "Nhận xét thực tế"}
+        {"group": "Nhóm tiêu chí", "item": "Tên mục", "status": "ĐẠT/CHƯA ĐẠT/CẢNH BÁO", "note": "Nhận xét thực tế cụ thể"}
       ],
-      "advice": "Lời khuyên hành động"
+      "advice": "Lời khuyên hành động tổng quát"
     }`;
 
     try {
@@ -38,16 +37,16 @@ async function startAudit() {
             })
         });
 
-        if (!response.ok) throw new Error("API Response not OK");
+        if (!response.ok) throw new Error("API Response Error");
 
         const result = await response.json();
         const content = JSON.parse(result.candidates[0].content.parts[0].text);
         
-        updateUI(content, name); // Hàm hiển thị ra màn hình
+        updateUI(content, name);
 
     } catch (e) {
-        console.error("Lỗi:", e);
-        alert("Lỗi kết nối Gemini API. Hãy kiểm tra lại API Key hoặc kết nối mạng!");
+        console.error(e);
+        alert("Lỗi kết nối Gemini API. Hãy đảm bảo API Key của bạn còn hoạt động và không bị chặn vùng địa lý!");
     } finally {
         btn.innerText = "PHÂN TÍCH HỆ THỐNG";
         btn.disabled = false;
